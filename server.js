@@ -13,21 +13,21 @@ connectDB();
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
-
-// Enable CORS
+// Enable CORS - must be before other middleware
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://frontend-liu-jiahuis-projects.vercel.app',
-    'https://frontend-chi-eight-98.vercel.app',
-    'https://frontend-ljh-12357-liu-jiahuis-projects.vercel.app'
-  ],
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Handle preflight requests
+app.options('*', cors());
+
+// Security middleware - with CORS-friendly settings
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "unsafe-none" }
 }));
 
 // Body parser
